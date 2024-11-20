@@ -9,8 +9,11 @@ on:
       - '**'
 
 jobs:
+
   test:
     runs-on: ubuntu-latest
+    env:
+      TEST_RAILS_MASTER_KEY: test
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
