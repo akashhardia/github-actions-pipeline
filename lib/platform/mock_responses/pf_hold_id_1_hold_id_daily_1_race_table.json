@@ -1,0 +1,30 @@
+{
+  "hold_id": "194",
+  "hold_id_daily": 503,
+  "track_code": "22",
+  "race_table": [
+    {
+      "program_no": 1,
+      "entries_id": "2021010222001",
+      "race_no": 1,
+      "type_code": "1",
+      "time_zone_code": 1,
+      "race_status": 0
+    },
+    {
+      "program_no": 2,
+      "entries_id": "2021010222002",
+      "race_no": 2,
+      "type_code": "1",
+      "race_status": 0
+    },
+    {
+      "program_no": 3,
+      "entries_id": "2021010222003",
+      "race_no": 3,
+      "type_code": "1",
+      "race_status": 0
+    }
+  ],
+  "result_code": 100
+}

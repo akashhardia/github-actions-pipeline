@@ -1,0 +1,21 @@
+{
+  "result_code": 100,
+  "player_id": "abc123",
+  "entry_count": 100,
+  "run_count": 200,
+  "consecutive_count": 2,
+  "1st_count": 5,
+  "2nd_count": 90,
+  "3rd_count": 50,
+  "outside_count": 55,
+  "1st_place_count": 1,
+  "2nd_place_count": 2,
+  "3rd_place_count": 3,
+  "winner_rate": 10.1,
+  "2quinella_rate": 20.1,
+  "3quinella_rate": 15.1,
+  "hold_list": [
+    {"hold_id": "2", "period": 0, "round": 0},
+    {"hold_id": "3", "period": 1, "round": 6}
+  ]
+}

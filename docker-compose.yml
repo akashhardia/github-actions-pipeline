@@ -1,0 +1,77 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile.dev
+    env_file: app.env
+    environment:
+      RAILS_ENV: development
+    depends_on:
+      - mysql
+      - sidekiq
+    volumes:
+      - ./:/app:cached # This option needs over Docker 17.06 CE on macOS environment
+    networks:
+      - frontend
+      - default
+    command: /bin/sh -c "rm -f /app/tmp/pids/server.pid; bundle exec rails s -b 0.0.0.0"
+    tty: true
+    stdin_open: true
+
+  mysql:
+    build:
+      context: .
+      dockerfile: docker/mysql/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - default
+    ports:
+      - 3306
+    command: mysqld
+    volumes:
+      - ./docker/mysql/volumes/data:/var/lib/mysql
+    platform: linux/amd64
+
+  backend_nginx:
+    build:
+      context: .
+      dockerfile: docker/backend_nginx/Dockerfile.dev
+    depends_on:
+      - app
+    ports:
+      - "3000:80"
+    networks:
+      - frontend
+      - default
+
+  redis:
+    build:
+      context: .
+      dockerfile: docker/redis/Dockerfile
+    networks:
+      - default
+    ports:
+      - 6379
+      - 6380
+    command: /bin/sh -c "redis-server --appendonly yes"
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile.dev
+    env_file: app.env
+    environment:
+      RAILS_ENV: development
+    depends_on:
+      - redis
+    volumes:
+      - ".:/app"
+    networks:
+      - default
+    command: /bin/sh -c "bundle exec sidekiq --environment development -C config/sidekiq.yml -r /app"
+
+networks:
+  frontend:
+    external: true

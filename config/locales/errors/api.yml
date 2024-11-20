@@ -1,0 +1,34 @@
+ja:
+  api_errors:
+    cognito:
+      invalid_params: 入力値が不正です
+      not_authorized: メールアドレス、またはパスワードが間違っています。もう一度入力してください
+      invalid_password: パスワードは8文字以上、大文字、小文字を含む半角英数で指定してください
+      code_mismatch: emailまたはコード値が不正です
+      user_not_found: 対象のユーザーが見つかりません
+    sixgram:
+      webhook_token_mismatch: X-Webhook-Tokenが一致しません
+      already_migrated: すでに移行済みです
+      need_contact: お問い合わせでの対応が必要です
+      error_occured: 6gramApiにエラーが発生しました
+      client_auth_failed: クライアント認証エラーが発生しました %{description}
+      send_sms_auth_code:
+        invalid_request: 入力内容に誤りがあります。もう一度ご確認ください。
+        invalid_phone_number: 不正な形式です。もう一度ご確認ください。
+        lockout_env: 試行回数の上限に達しました。しばらく経ってからお試しください。
+        lockout_send_auth_code: 試行回数の上限に達しました。しばらく経ってからお試しください。
+        send_sms_phone_number_limit_exceeded: 試行回数の上限に達しました。しばらく経ってからお試しください。
+        send_sms_limit_exceeded: 試行回数の上限に達しました。しばらく経ってからお試しください。
+      verify_sms_auth_code:
+        invalid_request: 入力内容に誤りがあります。もう一度ご確認ください。
+        invalid_auth_code: このPIST6認証コードは間違っています。もう一度ご確認ください。
+        invalid_verify_token: エラーが発生しました。もう一度電話番号を入力してください。
+        already_used_auth_code: このPIST6認証コードは既に使用済みです。
+        expired_auth_code: このPIST6認証コードは期限切れです。もう一度電話番号を入力してください。
+        lockout_env: 試行回数の上限に達しました。しばらく経ってからお試しください。
+        revoked_auth_code: 試行回数の上限に達しました。しばらく経ってからお試しください。
+        birthdate_verification_required: <a href="https://tipstar.com/login">ご利用者様確認が必要です。<br/>こちらから（https://tipstar.com/login）TIPSTARにログインいただき、登録確認をお願いします。<br/>※すでにTIPSTARにログインされている方はログアウト後、再度ログインをお願いします。</a>
+        birthdate_verification_unavailable:  <a href="https://tipstar.com/login">ご利用者様確認が必要です。<br/>こちらから（https://tipstar.com/login）TIPSTARにログインいただき、登録確認をお願いします。<br/>※すでにTIPSTARにログインされている方はログアウト後、再度ログインをお願いします。</a>
+        lockout_birthdate_verification:  <a href="https://tipstar.com/login">ご利用者様確認が必要です。<br/>こちらから（https://tipstar.com/login）TIPSTARにログインいただき、登録確認をお願いします。<br/>※すでにTIPSTARにログインされている方はログアウト後、再度ログインをお願いします。</a>
+    sixgram_payment:
+      error_occured: 決済中にエラーが発生しました %{error_detail}

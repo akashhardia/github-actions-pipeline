@@ -1,0 +1,194 @@
+@startuml 
+|||
+note across : 【通知する種別(type_id)】\n1：開催　2：あっせん選手　3：出走表　4：レース変更\n5：レース結果　6：順延　7：打切り　8：開催中止\n9：レースカット　10：タイムトライアル　11：独自選手マスタ
+autonumber
+|||
+250PF -> 250portal : 開催状況変更通知
+250portal -[#red]> 250PF : type_idが想定外の場合result_code600を返す
+== type_id = 1 (開催登録/更新) ==
+|||
+autonumber 2
+250portal -> 250PF : hold_idを指定してカレンダーAPIをリクエスト
+||20||
+250PF -> 250portal : 開催日程情報を返却
+250portal -> DB : pf_hold_idをもとに開催を探索
+DB -> DB : 開催があれば更新、なければ作成
+note right
+以下関連モデルを更新または作成
+・hold_daily
+・hold_daily_schedule
+・race
+end note
+DB -> DB : 不要なレースを削除
+note left
+この処理によりレースを持たなくなった
+hold_daily_scheduleも削除
+end note
+DB -> DB : 販売スケジュールを作成
+note right
+以下関連モデルを作成(※既に販売スケジュールが存在する場合は作成しない)
+・seat_type
+・seat_area
+・ticket
+・seat_type_option
+end note
+250portal -[#green]> 250PF : 成功した場合result_code100を返す
+autonumber 8
+250portal -[#red]> 250PF : 失敗した場合result_code600を返す
+== type_id = 2 (あっせん選手登録/更新) ==
+|||
+autonumber 2
+250portal -> 250PF : pf_hold_idを指定してあっせん選手APIをリクエスト
+||20||
+250PF -> 250portal : あっせん選手リストを返却
+250portal -> DB : pf_hold_idをもとに開催を探索
+250portal -> DB : player_idをもとに選手を探索
+|||
+DB -> DB : 開催があればそれに紐づくhold_playerを5の選手idで更新、なければ作成
+DB -> DB : hold_playerに紐づくあっせん選手があれば更新、なければ作成
+250portal -[#green]> 250PF : 成功した場合result_code100を返す
+autonumber 8
+250portal -[#red]> 250PF : 失敗した場合result_code600を返す
+== type_id = 3 (holdとhold_id_dailyを指定して出走表登録/更新) ==
+|||
+autonumber 2
+250portal -> 250PF : pf_hold_id, hold_id_dailyを指定して出走表APIをリクエスト
+||20||
+250PF -> 250portal : プログラムリストを返却
+|||
+250portal -> 250PF :  entries_idを指定して出走表詳細APIをリクエスト
+||20||
+250PF -> 250portal : 出走表詳細を返却
+|||
+250portal -> DB : hold_id_dailyをもとに開催デイリーを探索
+250portal -> DB : program_noをもとに、開催デイリーに紐づくレースを探索
+DB -> DB : レースを更新
+note right: entries_idを更新
+DB -> DB : レースに紐づく出走表詳細を更新
+note right
+以下関連モデルを更新
+・race_player
+・bike_info
+・front_wheel_info
+・rear_wheel_info
+・vote_info
+end note
+250portal -[#green]> 250PF : 成功した場合result_code100を返す
+autonumber 10
+250portal -[#red]> 250PF : 失敗した場合result_code600を返す
+== type_id = 4 (entries_idを指定して出走表登録/更新) ==
+|||
+autonumber 2
+250portal -> 250PF :  entries_idを指定して出走表詳細APIをリクエスト
+||20||
+250PF -> 250portal : 出走表詳細を返却
+|||
+250portal -> DB : entries_idをもとにレースを探索
+DB -> DB : レースがあればそれに紐づく出走表詳細を更新、なければ作成
+note right
+以下の関連モデルを更新または作成
+・race_player
+・bike_info
+・front_wheel_info
+・rear_wheel_info
+・vote_info
+end note
+250portal -[#green]> 250PF : 成功した場合result_code100を返す
+autonumber 6
+250portal -[#red]> 250PF : 失敗した場合result_code600を返す
+== type_id = 5 (レース結果登録) ==
+|||
+autonumber 2
+250portal -> 250PF : entries_idを指定してレース結果APIをリクエスト
+||20||
+250PF -> 250portal : レース結果を返却
+|||
+250portal -> DB : entries_idをもとに出走表詳細を探索
+DB -> DB : 出走表詳細に紐づくレース結果、払戻情報があれば\nそれらを一旦削除して、再度作成する
+note right
+以下関連モデルを作成
+・race_result_player
+・result_event_code
+・hold_player_result
+end note
+DB -> DB : 出走表詳細を更新
+note right
+以下関連モデルを更新
+・vote_info
+・race_player
+・bike_info
+・front_wheel_info
+・rear_wheel_info
+end note
+250portal -[#green]> 250PF : 成功した場合result_code100を返す
+autonumber 7
+250portal -[#red]> 250PF : 失敗した場合result_code600を返す
+== type_id = 6, 7, 8, 9 (hold_idを指定して開催登録/更新) ==
+|||
+autonumber 2
+250portal -> 250PF : hold_idを指定してカレンダーAPIをリクエスト
+||20||
+250PF -> 250portal : 開催日程情報を返却
+|||
+250portal -> DB : pf_hold_idをもとに開催を探索
+DB -> DB : 開催があれば更新、なければ作成
+note right
+以下関連モデルを更新または作成
+・hold_daily
+・hold_daily_schedule
+・race
+end note
+DB -> DB : 不要なレースを削除
+note left
+これによりレースを持たなくなった
+hold_daily_scheduleも削除
+end note
+DB -> DB : 販売スケジュール作成
+note right
+以下関連モデルを作成
+(※既に販売情報が存在する場合は作成しない)
+・seat_type
+・seat_area
+・ticket
+・seat_type_option
+end note
+250portal -[#green]> 250PF : 成功した場合result_code100を返す
+autonumber 8
+250portal -[#red]> 250PF : 失敗した場合result_code600を返す
+== type_id = 10 (タイムトライアル登録/更新) ==
+|||
+autonumber 2
+250portal -> 250PF : pf_hold_idを指定してタイムトライアル結果APIをリクエスト
+||20||
+250PF -> 250portal : 計測システムから通知されるタイムと\nVRSから通知される確定情報の結果を返却
+|||
+250portal -> DB : pf_hold_idをもとに開催を探索
+DB -> DB : 開催に紐づくタイムトライアル結果があれば更新、なければ作成
+note right
+以下関連モデルを更新または作成
+・time_trial_player
+・time_trial_bike_info
+・time_trial_front_wheel_info
+・time_trial_rear_wheel_info
+end note
+DB -> DB : time_trial_playerが速報連携時に事実と異なった選手番号で登録されていた場合は\n確定連携時に削除する
+250portal -[#green]> 250PF : 成功した場合result_code100を返す
+autonumber 7
+250portal -[#red]> 250PF : 失敗した場合result_code600を返す
+== type_id = 11 (選手登録/更新) ==
+|||
+autonumber 2
+250portal -> 250PF : update_dateを指定して選手マスタAPIをリクエスト
+||20||
+250PF -> 250portal : 選手マスタを返却
+|||
+250portal -> DB : pf_250_regist_idをもとに選手オリジナル情報を探索
+DB -> DB : 選手オリジナル情報があれば更新、なければ作成
+note right
+以下関連モデルを更新または作成
+・player
+end note
+250portal -[#green]> 250PF : 成功した場合result_code100を返す
+autonumber 6
+250portal -[#red]> 250PF : 失敗した場合result_code600を返す
+@enduml

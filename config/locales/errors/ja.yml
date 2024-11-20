@@ -1,0 +1,210 @@
+ja:
+  custom_errors:
+    annual_schedules:
+      active_blank: 有効化/無効化を入力してください
+    campaigns:
+      uneditable_after_approved: 承認済みの場合、コード、割引率、開始日、終了日は編集できません
+      already_used: このキャンペーンは利用済みです
+      not_destroy: 承認後は削除できません
+      already_approved: このキャンペーンはすでに承認されています
+      please_approve: このキャンペーンを先に承認してください
+      already_terminated: このキャンペーンはすでに停止されています
+      not_found_hold_daily: 存在しない開催デイリーが含まれています
+      not_found_seat_type: 存在しない席種が含まれています
+    coupons:
+      already_canceled: このクーポンは利用停止中です
+      unable_to_delete_after_distributed: 配布後は削除できません
+      uneditable_after_canceled: 利用停止のクーポンは編集できません
+      uneditable_after_approved: 配布後は割引率の編集はできません
+      unable_to_distribute_after_canceled: 利用停止のクーポンは配布できません
+      unable_to_distribute_again: 配布後のクーポンは再配布できません
+      distribute_at_is_blank: 配布予定日を選択してください
+      csv_read_error: アップされたCSVにエラーが有ります。※CSVの文字コードはUTF-8にしてください
+      invalid_6gram_id: 存在しないユーザーの6gramIDが含まれています
+      no_users_to_distribute: 配布対象ユーザーがいません
+      not_before_available_end_at: 現在日時より先の日付を選択してください
+      not_found_hold_daily: 存在しない開催デイリーが含まれています
+      not_found_seat_type: 存在しない席種が含まれています
+      ids_blank: coupon_idsを入力してください
+    datas:
+      promoter_year_blank: promoter_yearを入力してください
+      promoter_year_requires_season_and_round_code: promoter_yearを指定する場合は、seasonとround_codeを指定してください
+      filter_key_requires_filter_value: filter_keyを指定する場合は、filter_valueを指定してください
+      promoter_year_and_season_blank: パラメータを指定する場合は、promoter_yearとseasonを指定してください
+      race_id_blank: race_idを入力してください
+    login_required_errors:
+      login_again: もう一度ログインしてください
+      input_phone_number: もう一度電話番号を入力してください
+    messages:
+      internal_server_error: 予期せぬエラーが発生しました
+      bad_request: リクエストが不正です
+      not_found: 指定されたデータまたはページが存在しません
+      execute_payment_error: 決済処理に失敗しました
+      login_required_error: ログインしてください
+      ng_user_error: アカウントが無効です
+      error_occured: エラーが発生しました
+    orders:
+      already_returned: 返金処理済みです。
+      fail_to_purchase: 購入に失敗しました。charge_id：%{charge_id}
+      cart_is_empty: 座席が選択されていません
+      area_display_not_permitted: このエリアの表示は許可されていません
+      ticket_not_found: 座席が見つかりませんでした
+      unapproved_sales: 販売が許可されていません
+      sale_term_outside: 販売期間外です
+      ticket_not_available: 空席ではありません
+      seat_area_mismatch: 異なるエリアのチケットは同時に購入できません
+      seat_sale_mismatch: 異なるレースのチケットは同時に購入できません
+      exceed_purchase_limit: 一度に購入できるチケットは4枚までです
+      sales_type_mismatch: 単体販売とセット販売は同時に購入できません
+      excess_or_deficiency_unit_ticket: セット販売のチケットが揃っていません
+      seat_type_option_mismatch: チケットに対応するオプションではありません
+      coupon_not_found: このクーポンはご利用できません
+      coupon_available_deadline_has_passed: このクーポンはご利用可能期限を過ぎています
+      coupon_hold_daily_schedules_mismatch: このクーポンはご指定の開催日程でのご利用ができません
+      option_and_coupon_cannot_be_used_at_same_time: このクーポンはオプションとの併用ができません
+      option_and_campaign_cannot_be_used_at_same_time: このキャンペーンはオプションとの併用ができません
+      campaign_not_found: このキャンペーンコードは存在しません
+      campaign_hold_daily_schedules_mismatch: 入力されたキャンペーンコードは、この開催では適用対象外です
+      campaign_master_seat_types_mismatch: 入力されたキャンペーンコードは、このエリアでは適用対象外です
+      campaign_has_terminated: このキャンペーンは終了しています
+      campaign_before_start: このキャンペーンコードは有効期間前です
+      campaign_after_end: このキャンペーンコードは有効期間を過ぎています
+      campaign_already_used: このキャンペーンコードはご利用済みです
+      campaign_usage_count_over_limit: このキャンペーンコードはご利用いただける会員様数の上限に達しました
+      coupon_and_campaign_cannot_use_at_same_time: クーポンとキャンペーンは併用ができません
+    platform:
+      holds_update:
+        params_blank: '[年 & 月] または [開催ID] を入力してください。'
+        require_year_and_month: '[年 & 月] の両方の指定が必須です。'
+        input_either_year_and_month_or_hold_id: '[年 & 月] または [開催ID] のどちらか一方を入力してください。'
+      players_update:
+        params_blank: '[年月日] または [選手ID] を入力してください。'
+        input_either_update_date_or_player_id: '[年月日] または [選手ID] のどちらか一方のみを入力してください。'
+      race_details_update:
+        params_blank: 年月を入力してください。
+        year_month_invalid: '[年月] は "YYYY_MM" の形式で入力してください。'
+      holding_word_codes_update:
+        params_blank: '[年月日] を入力してください。'
+        update_date_invalid: '[年月日] は"YYYYMMDD" の形式で入力してください。'
+      annual_schedule_update:
+        params_blank: 主催者コードと開催年度の両方を入力してください。
+      player_race_result_update:
+        player_id_blank: 選手IDを入力してください。
+      player_result_update:
+        mediated_player_not_found: 対象の選手情報が見つかりません。
+      odds_info_update:
+        params_blank: '[出走ID] を入力してください'
+      input_year_and_month: '[年]と[月]はセットで入力してください。'
+      hold_id_list_blank: ' [開催IDリスト] を入力してください。'
+      not_found: 取得できませんでした。
+      params_blank: 引数がありません。
+      confirm_params: 引数を確認してください。
+      specify_params: 引数を指定してください。
+      target_not_found: '%{target}が取得できませんでした。'
+      params_or_target_blank: 引数または対象の%{target}がありません。
+      hold_id_blank: hold_idがありません。
+      target_hold_blank: 対象の開催がありません。
+      target_player_blank: 対象の選手が見つかりません。
+      race_not_found: raceが見つかりません。
+      race_player_not_found: 出走者が見つかりません。
+    players:
+      csv_read_error: アップされたCSVにエラーが有ります。※CSVの文字コードはUTF-8にしてください
+      invalid_player_id: 存在しない選手のIDが含まれています
+    seat_sale:
+      tickets_on_sale_yet: チケットは既に販売中です
+      sales_discontinued: チケットが販売中止されています
+      promoter_year_empty: 開催年度がありません
+      period_empty: シーズンがありません
+      round_empty: ラウンドがありません
+      params_blank: パラメータが不足しています
+      bulk_refund_unavailable: 販売停止中以外のステータスで一括返金はできません。
+      bulk_transfer_unavailable: 入場可能時間が過ぎた販売は譲渡URLが発行できません。
+    template_seat_sales:
+      unavailable: ご指定の販売テンプレートは既に削除されています
+      immutable: ご指定のテンプレートは削除変更不可対象または販売情報、自動生成に使用されているため変更できません
+      undeletable: ご指定のテンプレートは削除変更不可対象または販売情報、自動生成に使用されているため削除できません
+      already_deleted: ご指定のテンプレートは既に削除されています
+      cannot_be_added_and_edited: ご指定のテンプレートは削除変更不可対象または販売情報、自動生成に使用されているため追加・変更できません
+    template_seats:
+      ticket_not_found: 存在しないチケットが含まれています
+    ticket_reserves:
+      ownership_not_match: 所持チケットではありません
+      expired: 入場期限が過ぎています
+      transfer_uuid_blank: URLが無効です。
+      already_entered: すでに入場しています
+    ticket:
+      sold_or_temporary_hold: チケットは購入済み、または決済処理中のため変更できません
+      not_available: チケットが仮押さえ可能なステータスではありません
+      not_stop_selling: チケットは仮押さえされていません
+      do_not_transfer: チケットは販売停止でないため、譲渡URLは発行できません
+      transferring: チケットは譲渡処理中です
+      qr_ticket_id_required: チケット番号は必須です
+      not_found: チケットが見つかりませんでした
+      qr_ticket_id_blank: QRコードが発行されていません
+      status_is_before_enter: すでにチケットは未入場になっています
+      face_recognition_not_found: 顔認証情報が見つかりません
+      fail_to_delete_face_recognition: 顔認証削除が失敗しました
+      already_disabled: すでにチケットは無効になっています
+      already_enabled: すでにチケットは有効になっています
+      not_exist: 存在しないチケットが含まれています
+      ticket_reserve_not_found: 該当のチケット予約がありません
+      ownership_not_match: チケット所持者ではありません
+      template_seat_type_blank: テンプレートに不備があります。席種が未定義です。
+      template_seat_area_blank: テンプレートに不備があります。エリアが未定義です。
+      template_seat_blank: テンプレートに不備があります。座席が未定義です。
+      seat_type_or_seat_area_blank: テンプレートに不備があります。席種またはエリアが未定義です。
+    transfer:
+      to_yourself: 自分自身に譲渡はできません
+      ticket_has_expired: チケットが有効期限切れです
+      not_sold_ticket: 購入されたチケットではありません
+      not_stop_selling: 仮押さえされたチケットではありません
+      transferred: 譲渡処理済みです
+      not_transferred: チケットが譲渡中ではありません
+      ticket_has_admission: 入場済みのチケットは譲渡できません
+    template:
+      template_is_immutable: このテンプレートは変更不可です
+    users:
+      profile_blank: ユーザーが見つかりません。
+      family_name_kana_not_match: 姓（カタカナ）が一致しません。
+      given_name_kana_not_match: 名（カタカナ）が一致しません。
+      already_deleted: 退会したユーザーです。
+      phone_number_already_exist: この電話番号はすでに登録済です。<br />ログイン画面より再度ログインしてください。
+      verify_token_blank: 再度電話番号を入力してください
+      invalid: アカウントが無効です
+      login_via_mixi_m: MIXI Mでログインしてください
+      auth_failed: ユーザー認証に失敗しました
+      email_already_verified: 既に認証済みです
+      email_blank: メールアドレスを正しく入力してください
+      email_auth_expired: 認証期間が過ぎました
+      not_exist: 該当するユーザーが存在しません
+      already_unsubscribed: すでに退会済みです
+      different_uuid: ユーザー本人以外ではこの処理は無効です
+      login_again_via_mixi_m: もう一度MIXI Mでログインしてください
+      already_registered: 既にアカウント登録済みです
+    retired_players:
+      params_blank: '[選手ID] を入力してください'
+      target_player_blank: 対象の選手が見つかりません
+      already_retired: 既に引退登録済みです
+  seat_sales:
+    over_start_time: 販売開始日が過ぎているので更新できません
+    update_failed: 更新失敗しました
+    start_at_over_end_at: 販売開始時間が終了時間を超えています
+    over_close_at: 入場終了時間が過ぎているので更新できません
+    not_copy: チケット販売は販売前または販売中のためコピーできません
+    exists: すでに有効なチケット販売があります
+    not_destroy: チケット販売は販売承認済みであるため削除できません
+    not_sale: チケット販売は販売されていないため中止できません
+    not_change_template: チケット販売は未承認ではないため、テンプレートの変更はできません
+  admission:
+    timeout: TIMEOUT # タイムアウト
+    ticket_not_found: TICKET_NOT_FOUND # チケットが存在していない
+    ticket_has_expired: TICKET_HAS_EXPIRED # チケットは有効期限が切れた
+    ticket_not_available_yet: TICKET_NOT_AVAILABLE_YET # チケットは使用日付に達していない
+    ticket_validate_failed: TICKET_VALIDATE_FAILED # 不正なチケット (user_idがticket_idと一致しない)
+    ticket_has_banned: TICKET_HAS_BANNED # チケットが停止されている、または、ユーザーのアカウントが停止されている
+    ticket_cannot_clean: TICKET_CANNOT_CLEAN # チケット削除が失敗した場合
+    the_request_ticket_id_field_is_required: THE_REQUEST_TICKET_ID_FIELD_IS_REQUIRED
+    the_value_you_have_entered_is_invalid: THE_VALUE_YOU_HAVE_ENTERED_IS_INVALID
+  ticket:
+    stadium_not_found: STADIUM_NOT_FOUND # 指定された競技場のレコードは存在しない
+    data_for_this_date_not_found: DATA_FOR_THIS_DATA_NOT_FOUND # 指定された日時のレコードは存在しない

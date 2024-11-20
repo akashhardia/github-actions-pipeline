@@ -1,0 +1,58 @@
+{
+    "hold_id": "100",
+    "confirm": true,
+    "players": 7,
+    "players_list": [
+        {
+            "player_id": "6",
+            "gear": null,
+            "first_time": 10.001,
+            "second_time": 10.002,
+            "total_time": 20.003,
+            "bike_info": {
+                "frame_code": "000",
+                "front_wheel_info": {
+                    "wheel_code": "000",
+                    "rental_code": "0"
+                },
+                "rear_wheel_info": {
+                    "wheel_code": "000",
+                    "rental_code": "0"
+                }
+            },
+            "ranking": 1,
+            "grade_code": 5,
+            "repletion_code": 4,
+            "race_code": 1,
+            "first_race_code": "C",
+            "entry_code": 6,
+            "pattern_code": "6"
+        },
+        {
+            "player_id": "7",
+            "gear": null,
+            "first_time": 11.001,
+            "second_time": 11.002,
+            "total_time": 22.003,
+            "bike_info": {
+                "frame_code": "000",
+                "front_wheel_info": {
+                    "wheel_code": "000",
+                    "rental_code": "0"
+                },
+                "rear_wheel_info": {
+                    "wheel_code": "000",
+                    "rental_code": "0"
+                }
+            },
+            "ranking": 2,
+            "grade_code": 5,
+            "repletion_code": 4,
+            "race_code": 1,
+            "first_race_code": "C",
+            "entry_code": 6,
+            "pattern_code": "6"
+        }
+    ],
+    "result_code": 100
+}

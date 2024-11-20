@@ -1,0 +1,9 @@
+ja:
+  activerecord:
+    models:
+      coupon: クーポン
+    attributes:
+      coupon:
+        available_end_at: 利用終了日時
+        scheduled_distributed_at: 配布予定日時
+        approved_at: 承認日時

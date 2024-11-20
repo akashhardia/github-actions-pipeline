@@ -1,0 +1,20 @@
+{
+  "id_list": [
+    {
+      "master_id": "1",
+      "identifier": "101",
+      "code": "11",
+      "name_list": [
+        {
+          "lang": "jp",
+          "name": "既存の名前",
+          "alias": "既"
+        }
+      ],
+      "name3": null,
+      "name2": null,
+      "name1": null
+    }
+  ],
+  "result_code": 100
+}

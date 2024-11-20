@@ -1,0 +1,15 @@
+@startuml 
+autonumber
+250PF -> 250portal : オッズ通知
+250portal -> DB : entries_idをもとに出走表詳細を探索
+DB -> DB : 出走表詳細に紐づくオッズを作成
+note right
+odds_info
+odds_list
+odds_detail
+を作成
+end note
+250portal -[#green]> 250PF : 成功した場合result_code100を返す
+autonumber 4
+250portal -[#red]> 250PF : 失敗した場合result_code600を返す
+@enduml

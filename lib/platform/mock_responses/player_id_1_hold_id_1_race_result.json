@@ -1,0 +1,42 @@
+{
+  "player_id": 1,
+  "race_result": [
+    {
+      "hold_id": "1",
+      "event_date": "20221101",
+      "hold_daily": 1,
+      "daily_status": "2",
+      "entries_id": "1",
+      "race_no": 2,
+      "race_status": 1,
+      "rank": 1,
+      "time": "12:34.5678",
+      "event_code": "U"
+    },
+    {
+      "hold_id": "1",
+      "event_date": "20221101",
+      "hold_daily": 1,
+      "daily_status": "2",
+      "entries_id": "1",
+      "race_no": 2,
+      "race_status": 1,
+      "rank": 2,
+      "time": "12:34.5679",
+      "event_code": "U"
+    },
+    {
+      "hold_id": "1",
+      "event_date": "20221101",
+      "hold_daily": 1,
+      "daily_status": "2",
+      "entries_id": "1",
+      "race_no": 2,
+      "race_status": 1,
+      "rank": 3,
+      "time": "12:34.5679",
+      "event_code": "U"
+    }
+  ],
+  "result_code": 100
+}

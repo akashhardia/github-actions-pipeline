@@ -1,0 +1,9 @@
+ja:
+  activerecord:
+    models:
+      template_seat_sale_schedule: 自動生成値
+    attributes:
+      template_seat_sale_schedule:
+        sales_end_time: 販売終了時刻
+        admission_available_time: 入場開始時刻
+        admission_close_time: 入場終了時刻

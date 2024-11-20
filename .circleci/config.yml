@@ -1,0 +1,408 @@
+version: 2.1
+
+orbs:
+  slack: circleci/slack@4.12.0
+  aws-ecr: circleci/aws-ecr@7.3.0
+  aws-ecs: circleci/aws-ecs@2.2.1
+
+test_job: &test_job
+  steps:
+    - run: apk add --no-cache bash curl
+    - checkout
+    - setup_remote_docker:
+        version: docker24
+        docker_layer_caching: false
+    # 残りのステップ
+    - run:
+        name: Build image
+        command: |
+          docker-compose -f $COMPOSE_YAML build --parallel
+    - run:
+        name: Launch the database
+        command: |
+          docker-compose -f $COMPOSE_YAML up -d mysql
+    # - run:
+    #     name: Run Rubocop
+    #     command: |
+    #       docker-compose -f $COMPOSE_YAML run --rm app bundle exec rubocop -c .rubocop.yml --parallel
+    - run:
+        name: Wait redis
+        command: |
+          docker-compose -f $COMPOSE_YAML run dockerize dockerize -wait tcp://redis:6379 -timeout 1m
+    - run:
+        name: Wait db
+        command: |
+          docker-compose -f $COMPOSE_YAML run dockerize dockerize -wait tcp://mysql:3306 -timeout 1m
+    - run:
+        name: Setup database
+        command: |
+          docker-compose -f $COMPOSE_YAML run --rm app bundle exec rails db:create db:migrate
+    # - run:
+    #     name: RSpec
+    #     command: |
+    #       docker-compose -f $COMPOSE_YAML run --rm app bundle exec rspec
+    - slack/notify:
+        event: pass
+        template: basic_success_1
+    - slack/notify:
+        event: fail
+        template: basic_fail_1
+
+jobs:
+  test:
+    docker:
+      - image: docker/compose:1.27.4
+        environment:
+          COMPOSE_YAML: docker/docker-compose-test.yaml
+    <<: *test_job
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore:
+                - staging
+                - stg
+                - master
+                - prd
+  staging-deploy:
+    jobs:
+      - test:
+          name: test
+          filters:
+            branches:
+              only: staging
+      - aws-ecr/build-and-push-image:
+          name: build-nginx-staging
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          checkout: true
+          dockerfile: "/docker/backend_nginx/Dockerfile.stg"
+          no-output-timeout: 20m
+          path: "."
+          region: AWS_REGION
+          repo: "${STAGING_ECS_SERVICE_NAME}-nginx"
+          skip-when-tags-exist: true
+          tag: "${CIRCLE_SHA1},latest"
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - staging
+          post-steps:
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecr/build-and-push-image:
+          name: build-rails-staging
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          checkout: true
+          dockerfile: "/docker/app/Dockerfile.production"
+          extra-build-args: "--build-arg RAILS_ENV=staging"
+          no-output-timeout: 20m
+          path: "."
+          region: AWS_REGION
+          repo: "${STAGING_ECS_SERVICE_NAME}-rails"
+          skip-when-tags-exist: true
+          tag: "${CIRCLE_SHA1},latest"
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - staging
+          post-steps:
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecs/run-task:
+          name: db-migrate-staging
+          docker-image-for-job: 'cimg/python:3.7.13'
+          cluster: "${STAGING_ECS_SERVICE_NAME}"
+          security-group-ids: "${STAGING_ECS_TASK_SECURITY_GROUP_ID}"
+          subnet-ids: "${STAGING_ECS_TASK_SUBNET}"
+          task-definition: "${STAGING_ECS_SERVICE_NAME}-migration"
+          requires:
+            - build-nginx-staging
+            - build-rails-staging
+          filters:
+            branches:
+              only:
+                - staging
+          post-steps:
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecs/deploy-service-update:
+          name: update-service
+          docker-image-for-job: 'cimg/python:3.7.13'
+          aws-region: AWS_REGION
+          family: "${STAGING_ECS_SERVICE_NAME}"
+          cluster-name: "${STAGING_ECS_SERVICE_NAME}"
+          container-image-name-updates: "container=${STAGING_ECS_SERVICE_NAME}-rails,tag=${CIRCLE_SHA1},container=${STAGING_ECS_SERVICE_NAME}-nginx,tag=${CIRCLE_SHA1}"
+          verify-revision-is-deployed: true
+          max-poll-attempts: 300
+          poll-interval: 10
+          requires:
+            - db-migrate-staging
+          filters:
+            branches:
+              only:
+                - staging
+          post-steps:
+            - slack/notify:
+                event: pass
+                template: success_tagged_deploy_1
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+  stg-deploy:
+    jobs:
+      - test:
+          name: test
+          filters:
+            branches:
+              only: stg
+      - aws-ecr/build-and-push-image:
+          name: build-nginx-stg
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          checkout: true
+          dockerfile: "/docker/backend_nginx/Dockerfile.stg"
+          no-output-timeout: 20m
+          path: "."
+          region: AWS_REGION
+          repo: "${STG_ECS_SERVICE_NAME}-nginx"
+          skip-when-tags-exist: true
+          tag: "${CIRCLE_SHA1},latest"
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - stg
+          post-steps:
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecr/build-and-push-image:
+          name: build-rails-stg
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          checkout: true
+          dockerfile: "/docker/app/Dockerfile.production"
+          extra-build-args: "--build-arg RAILS_ENV=staging"
+          no-output-timeout: 20m
+          path: "."
+          region: AWS_REGION
+          repo: "${STG_ECS_SERVICE_NAME}-rails"
+          skip-when-tags-exist: true
+          tag: "${CIRCLE_SHA1},latest"
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - stg
+          post-steps:
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecs/run-task:
+          name: db-migrate-stg
+          docker-image-for-job: 'cimg/python:3.7.13'
+          cluster: "${STG_ECS_SERVICE_NAME}-cluster"
+          security-group-ids: "${STG_ECS_TASK_SECURITY_GROUP_ID}"
+          subnet-ids: "${STG_ECS_TASK_SUBNET}"
+          task-definition: "${STG_ECS_SERVICE_NAME}-migration"
+          requires:
+            - build-nginx-stg
+            - build-rails-stg
+          filters:
+            branches:
+              only:
+                - stg
+          post-steps:
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecs/deploy-service-update:
+          name: update-service
+          docker-image-for-job: 'cimg/python:3.7.13'
+          aws-region: AWS_REGION
+          family: "${STG_ECS_SERVICE_NAME}"
+          cluster-name: "${STG_ECS_SERVICE_NAME}-cluster"
+          container-image-name-updates: "container=${STG_ECS_SERVICE_NAME}-rails,tag=${CIRCLE_SHA1},container=${STG_ECS_SERVICE_NAME}-nginx,tag=${CIRCLE_SHA1}"
+          verify-revision-is-deployed: true
+          max-poll-attempts: 300
+          poll-interval: 10
+          requires:
+            - db-migrate-stg
+          filters:
+            branches:
+              only:
+                - stg
+          post-steps:
+            - slack/notify:
+                event: pass
+                template: success_tagged_deploy_1
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecs/deploy-service-update:
+          name: update-service-sidekiq
+          docker-image-for-job: 'cimg/python:3.7.13'
+          aws-region: AWS_REGION
+          family: "${STG_ECS_SERVICE_NAME}-sidekiq"
+          cluster-name: "${STG_ECS_SERVICE_NAME}-cluster"
+          container-image-name-updates: "container=${STG_ECS_SERVICE_NAME}-rails,tag=${CIRCLE_SHA1}"
+          verify-revision-is-deployed: true
+          max-poll-attempts: 300
+          poll-interval: 10
+          requires:
+            - db-migrate-stg
+          filters:
+            branches:
+              only:
+                - stg
+          post-steps:
+            - slack/notify:
+                event: pass
+                template: basic_success_1
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+  prd-deploy:
+    jobs:
+      - test:
+          name: test
+          filters:
+            branches:
+              only:
+                - master
+                - prd
+      - aws-ecr/build-and-push-image:
+          name: build-nginx-prd
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          checkout: true
+          dockerfile: "/docker/backend_nginx/Dockerfile.prd"
+          no-output-timeout: 20m
+          path: "."
+          region: AWS_REGION
+          repo: "${PRD_ECS_SERVICE_NAME}-nginx"
+          skip-when-tags-exist: true
+          tag: "${CIRCLE_SHA1},latest"
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+                - prd
+          post-steps:
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecr/build-and-push-image:
+          name: build-rails-prd
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          checkout: true
+          dockerfile: "/docker/app/Dockerfile.production"
+          extra-build-args: "--build-arg RAILS_ENV=production"
+          no-output-timeout: 20m
+          path: "."
+          region: AWS_REGION
+          repo: "${PRD_ECS_SERVICE_NAME}-rails"
+          skip-when-tags-exist: true
+          tag: "${CIRCLE_SHA1},latest"
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+                - prd
+          post-steps:
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecs/run-task:
+          name: db-migrate-prd
+          docker-image-for-job: 'cimg/python:3.7.13'
+          cluster: "${PRD_ECS_SERVICE_NAME}-cluster"
+          security-group-ids: "${PRD_ECS_TASK_SECURITY_GROUP_ID}"
+          subnet-ids: "${PRD_ECS_TASK_SUBNET}"
+          task-definition: "${PRD_ECS_SERVICE_NAME}-migration"
+          requires:
+            - build-nginx-prd
+            - build-rails-prd
+          filters:
+            branches:
+              only:
+                - master
+                - prd
+          post-steps:
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecs/deploy-service-update:
+          name: update-service
+          docker-image-for-job: 'cimg/python:3.7.13'
+          aws-region: AWS_REGION
+          family: "${PRD_ECS_SERVICE_NAME}"
+          cluster-name: "${PRD_ECS_SERVICE_NAME}-cluster"
+          container-image-name-updates: "container=${PRD_ECS_SERVICE_NAME}-rails,tag=${CIRCLE_SHA1},container=${PRD_ECS_SERVICE_NAME}-nginx,tag=${CIRCLE_SHA1}"
+          verify-revision-is-deployed: true
+          max-poll-attempts: 300
+          poll-interval: 10
+          requires:
+            - db-migrate-prd
+          filters:
+            branches:
+              only:
+                - master
+                - prd
+          post-steps:
+            - slack/notify:
+                event: pass
+                template: success_tagged_deploy_1
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+      - aws-ecs/deploy-service-update:
+          name: update-service-sidekiq
+          docker-image-for-job: 'cimg/python:3.7.13'
+          aws-region: AWS_REGION
+          family: "${PRD_ECS_SERVICE_NAME}-sidekiq"
+          cluster-name: "${PRD_ECS_SERVICE_NAME}-cluster"
+          container-image-name-updates: "container=${PRD_ECS_SERVICE_NAME}-rails,tag=${CIRCLE_SHA1}"
+          verify-revision-is-deployed: true
+          max-poll-attempts: 300
+          poll-interval: 10
+          requires:
+            - db-migrate-prd
+          filters:
+            branches:
+              only:
+                - master
+                - prd
+          post-steps:
+            - slack/notify:
+                event: pass
+                template: basic_success_1
+            - slack/notify:
+                event: fail
+                template: basic_fail_1

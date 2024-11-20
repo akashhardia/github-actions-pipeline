@@ -1,0 +1,43 @@
+shared:
+  period:
+    spring: 1
+    summer: 2
+    autumn: 3
+    winter: 4
+    wildcard: 101
+    final: 201
+    period1: 301
+    period2: 302
+    quarter1: 311
+    quarter2: 312
+    quarter3: 313
+    quarter4: 314
+    extra1: 315
+    spring_s: 316
+    summer_s: 317
+    autumn_s: 318
+    winter_s: 319
+  daily_status:
+    before_held: 0 # 開催前
+    being_held: 1 # 開催中
+    finished_held: 2 # 開催終了
+    canceled_in_inspection: 3 # 前検日中止
+    canceled_before_inspection: 4 # 前検日前中止
+    postponed: 5 # 順延
+    medium_postponed: 6 # ４中順延
+    discontinuation: 7 # 開催打切
+    canceled_full_return: 8 # 開催中止（全返還）
+    canceled_takeover: 9 # 開催中止（票数引き継ぎ）
+  vote_type:
+    win: 10 # 単勝
+    place: 20 # 複勝
+    two_win: 30 # 車単
+    two_place: 31 # 車複
+    bracket_win: 40 # 2枠単
+    bracket_place: 41 # 2枠複
+    three_win: 50 # 3連単
+    three_place: 51 # 3連複
+    wide: 60 # ワイド
+  sales_type:
+    single: 0 # 単体販売
+    unit: 1 # VIP・BOX販売

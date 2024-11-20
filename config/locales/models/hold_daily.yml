@@ -1,0 +1,16 @@
+ja:
+  activerecord:
+    attributes:
+      hold_daily:
+        daily_status:
+          one: daily_status
+          before_held: 開催前
+          being_held: 開催中
+          finished_held: 開催終了
+          canceled_in_inspection: 前検日中止
+          canceled_before_inspection: 前検日前中止
+          postponed: 順延
+          medium_postponed: ４中順延
+          discontinuation: 開催打切
+          canceled_full_return: 開催中止（全返還）
+          canceled_takeover: 開催中止（票数引き継ぎ）

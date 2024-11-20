@@ -1,0 +1,14 @@
+ja:
+  activerecord:
+    errors:
+      models:
+        seat_sale:
+          attributes:
+            sales_start_at:
+              sales_start_at_over_end_at: "は販売終了日時より前の時間を指定してください"
+            sales_end_at:
+              sales_end_at_before_start_at: "は販売開始日時より後の時間を指定してください"
+            admission_available_at:
+              admission_available_at_over_close_at: "は入場締切日時より前の時間を指定してください"
+            admission_close_at:
+              admission_close_before_available_at: "は入場開始日時より後の時間を指定してください"

@@ -1,0 +1,20 @@
+{
+  "id_list": [
+    {
+      "master_id": "1",
+      "identifier": "101",
+      "code": "1010",
+      "name_list": [
+        {
+          "lang": "jp",
+          "name": "新しい名前",
+          "alias": "新"
+        }
+      ],
+      "name3": "東　京",
+      "name2": "東京",
+      "name1": "東"
+    }
+  ],
+  "result_code": 100
+}

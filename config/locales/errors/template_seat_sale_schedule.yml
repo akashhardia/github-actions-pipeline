@@ -1,0 +1,10 @@
+ja:
+  activerecord:
+    errors:
+      models:
+        template_seat_sale_schedule:
+          attributes:
+            sales_end_time:
+              sales_end_time_over_admission_close_time: "は入場終了時刻より前の時刻を指定してください"
+            admission_available_time:
+              admission_available_time_over_close_time: "は入場終了時刻より前の時刻を指定してください"

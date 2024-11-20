@@ -1,0 +1,11 @@
+ja:
+  activerecord:
+    models:
+      seat_sale: 販売情報
+    attributes:
+      seat_sale:
+        sales_start_at: 販売開始日時
+        sales_end_at: 販売終了日時
+        admission_available_at: 入場開始日時
+        admission_close_at: 入場締切日時
+        force_sales_stop_at: 販売中断日時

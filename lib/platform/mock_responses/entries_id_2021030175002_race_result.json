@@ -1,0 +1,61 @@
+{
+    "entries_id": "2021030175002",
+    "bike_count": null,
+    "race_stts": null,
+    "post_time": "1148",
+    "race_time": null,
+    "last_lap": null,
+    "players_list": [
+        {
+            "bike_no": 3,
+            "player_id": "23",
+            "incoming": null,
+            "rank": 1,
+            "point": null,
+            "trick_code": null,
+            "difference_code": null,
+            "home_class": false,
+            "back_class": false,
+            "start_position": null,
+            "last_lap": null,
+            "event_code":[
+                "abc","def","ghi"
+            ]
+        },
+        {
+            "bike_no": 2,
+            "player_id": "22",
+            "incoming": null,
+            "rank": 2,
+            "point": null,
+            "trick_code": null,
+            "difference_code": null,
+            "home_class": false,
+            "back_class": false,
+            "start_position": null,
+            "last_lap": null,
+            "event_code":[
+                "a1","a2","a3"
+            ]
+        }
+    ],
+    "payoff_list": [
+        {
+            "payoff_type": 10,
+            "vote_type": 10,
+            "tip1": "3",
+            "tip2": null,
+            "tip3": null,
+            "payoff": 5280
+        },
+        {
+            "payoff_type": 10,
+            "vote_type": 20,
+            "tip1": "3",
+            "tip2": null,
+            "tip3": null,
+            "payoff": 1910
+        }
+    ],
+    "result_code": 100
+}

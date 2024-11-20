@@ -1,0 +1,65 @@
+{
+  "id_list": [
+    {
+      "master_id": "1",
+      "identifier": "101",
+      "code": "11",
+      "name_list": [
+        {
+          "lang": "jp",
+          "name": "函館",
+          "alias": null
+        },
+        {
+          "lang": "en",
+          "name": "Hakodate",
+          "alias": null
+        }
+      ],
+      "name3": "u5931u3000u683c",
+      "name2": "u5931u683c",
+      "name1": "u5931"
+    },
+    {
+      "master_id": "2",
+      "identifier": "101",
+      "code": "12",
+      "name_list": [
+        {
+          "lang": "jp",
+          "name": "青森",
+          "alias": null
+        },
+        {
+          "lang": "en",
+          "name": "Aomori",
+          "alias": null
+        }
+      ],
+      "name3": null,
+      "name2": null,
+      "name1": null
+    },
+    {
+      "master_id": "3",
+      "identifier": "101",
+      "code": "13",
+      "name_list": [
+        {
+          "lang": "jp",
+          "name": "いわき平",
+          "alias": null
+        },
+        {
+          "lang": "en",
+          "name": "Iwakitaira",
+          "alias": null
+        }
+      ],
+      "name3": null,
+      "name2": null,
+      "name1": null
+    }
+  ],
+  "result_code": 100
+}

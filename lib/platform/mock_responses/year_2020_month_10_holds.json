@@ -1,0 +1,195 @@
+{
+  "hold_list": [
+    {
+      "hold_id": "10",
+      "track_code": "34",
+      "first_day": "20201014",
+      "hold_days": 2,
+      "grade_code": "0",
+      "purpose_code": "10",
+      "repletion_code": "5",
+      "hold_name_list": [
+        {
+          "lang": "jp",
+          "hold_name": "川崎開催テスト２"
+        },
+        {
+          "lang": "en",
+          "hold_name": null
+        }
+      ],
+      "hold_status": "2",
+      "promoter_code": "3050",
+      "promoter_year": 2020,
+      "promoter_times": 2,
+      "promoter_section": 0,
+      "days_list": [
+        {
+          "program_count": 0,
+          "hold_id_daily": 240,
+          "event_date": "20201013",
+          "hold_daily": 0,
+          "daily_branch": 1,
+          "race_count": 0,
+          "daily_status": "0",
+          "race_list": []
+        },
+        {
+          "program_count": 10,
+          "hold_id_daily": 241,
+          "event_date": "20201014",
+          "hold_daily": 1,
+          "daily_branch": 1,
+          "race_count": 9,
+          "daily_status": "5",
+          "race_list": [
+            {
+              "program_no": 1,
+              "race_no": 1,
+              "post_time": "1310",
+              "race_distance": 1020,
+              "lap_count": 4,
+              "race_code": "3",
+              "first_race_code": "C",
+              "entry_code": "6",
+              "pattern_code": "1",
+              "type_code": "5",
+              "event_code": "U",
+              "details_code": "F1",
+              "post_start_time": "2020-10-13 18:00:00",
+              "time_zone_code": 1
+            },
+            {
+              "program_no": 2,
+              "race_no": 2,
+              "post_time": "1330",
+              "race_distance": 1020,
+              "lap_count": 4,
+              "race_code": "3",
+              "first_race_code": "C",
+              "entry_code": "6",
+              "pattern_code": "1",
+              "type_code": "5",
+              "event_code": "U",
+              "details_code": "F2",
+              "post_start_time": "2020-10-13 18:00:00",
+              "time_zone_code": 1
+            },
+            {
+              "program_no": 3,
+              "race_no": 3,
+              "post_time": "1350",
+              "race_distance": 1020,
+              "lap_count": 4,
+              "race_code": "3",
+              "first_race_code": "C",
+              "entry_code": "6",
+              "pattern_code": "1",
+              "type_code": "5",
+              "event_code": "U",
+              "details_code": "F3",
+              "post_start_time": "2020-10-13 18:00:00",
+              "time_zone_code": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "hold_id": "11",
+      "track_code": "34",
+      "first_day": "20201014",
+      "hold_days": 2,
+      "grade_code": "0",
+      "purpose_code": "10",
+      "repletion_code": "5",
+      "hold_name_list": [
+        {
+          "lang": "jp",
+          "hold_name": "川崎開催テスト２"
+        },
+        {
+          "lang": "en",
+          "hold_name": null
+        }
+      ],
+      "hold_status": "2",
+      "promoter_code": "3050",
+      "promoter_year": 2020,
+      "promoter_times": 2,
+      "promoter_section": 0,
+      "days_list": [
+        {
+          "program_count": 0,
+          "hold_id_daily": 240,
+          "event_date": "20201013",
+          "hold_daily": 0,
+          "daily_branch": 1,
+          "race_count": 0,
+          "daily_status": "0",
+          "race_list": []
+        },
+        {
+          "program_count": 10,
+          "hold_id_daily": 241,
+          "event_date": "20201014",
+          "hold_daily": 1,
+          "daily_branch": 1,
+          "race_count": 9,
+          "daily_status": "5",
+          "race_list": [
+            {
+              "program_no": 1,
+              "race_no": 1,
+              "post_time": "1310",
+              "race_distance": 1020,
+              "lap_count": 4,
+              "race_code": "3",
+              "first_race_code": "C",
+              "entry_code": "6",
+              "pattern_code": "1",
+              "type_code": "5",
+              "event_code": "U",
+              "details_code": "F1",
+              "post_start_time": "2020-10-13 18:00:00",
+              "time_zone_code": 1
+            },
+            {
+              "program_no": 2,
+              "race_no": 2,
+              "post_time": "1330",
+              "race_distance": 1020,
+              "lap_count": 4,
+              "race_code": "3",
+              "first_race_code": "C",
+              "entry_code": "6",
+              "pattern_code": "1",
+              "type_code": "5",
+              "event_code": "U",
+              "details_code": "F2",
+              "post_start_time": "2020-10-13 18:00:00",
+              "time_zone_code": 1
+            },
+            {
+              "program_no": 3,
+              "race_no": 3,
+              "post_time": "1350",
+              "race_distance": 1020,
+              "lap_count": 4,
+              "race_code": "3",
+              "first_race_code": "C",
+              "entry_code": "6",
+              "pattern_code": "1",
+              "type_code": "5",
+              "event_code": "U",
+              "details_code": "F3",
+              "post_start_time": "2020-10-13 18:00:00",
+              "time_zone_code": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "result_code": 100
+}

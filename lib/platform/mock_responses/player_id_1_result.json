@@ -1,0 +1,21 @@
+{
+  "player_id": "1",
+  "entry_count": 1,
+  "run_count": 2,
+  "consecutive_count": 3,
+  "1st_count": 4,
+  "2nd_count": 5,
+  "3rd_count": 6,
+  "outside_count": 7,
+  "1st_place_count": 8,
+  "2nd_place_count": 9,
+  "3rd_place_count": 10,
+  "winner_rate": 0.1,
+  "2quinella_rate": 0.1,
+  "3quinella_rate":0.1,
+  "hold_list": [
+    {"hold_id": "2", "period": 0, "round": 0},
+    {"hold_id": "3", "period": 1, "round": 6}
+  ],
+ "result_code": 100
+}

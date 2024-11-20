@@ -1,0 +1,12 @@
+ja:
+  activerecord:
+    errors:
+      models:
+        coupon:
+          attributes:
+            scheduled_distributed_at:
+              scheduled_distributed_at_over_end_at: "が利用可能終了日時より後になっています"
+            available_end_at:
+              available_end_at_before_start_at: "が配布予定日時より前になっています"
+            approved_at:
+              approved_at_over_end_at: "が利用終了日時より後になっています"

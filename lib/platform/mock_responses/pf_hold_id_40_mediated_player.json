@@ -1,0 +1,40 @@
+{
+    "hold_id": "40",
+    "issue_list": [
+        {
+            "player_id": "10",
+            "regist_num": 14697,
+            "issue_code": "100",
+            "grade_code": "0",
+            "repletion_code": "0",
+            "race_code": "4",
+            "first_race_code": "C",
+            "entry_code": "6",
+            "pattern_code": "1",
+            "miss_day": null,
+            "join_code": null,
+            "change_code": null,
+            "add_day": null,
+            "add_issue_id": null,
+            "add_issue_code": null
+        },
+        {
+          "player_id": "11",
+          "regist_num": 14698,
+          "issue_code": "100",
+          "grade_code": "0",
+          "repletion_code": "0",
+          "race_code": "4",
+          "first_race_code": "C",
+          "entry_code": "6",
+          "pattern_code": "1",
+          "miss_day": null,
+          "join_code": null,
+          "change_code": null,
+          "add_day": null,
+          "add_issue_id": null,
+          "add_issue_code": null
+      }
+    ],
+    "result_code": 100
+}

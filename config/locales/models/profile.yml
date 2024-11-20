@@ -1,0 +1,36 @@
+ja:
+  activerecord:
+    models:
+      profile: プロフィール
+    attributes:
+      profile:
+        family_name: 名前（姓）
+        given_name: 名前（名）
+        family_name_kana: フリガナ（セイ）
+        given_name_kana: フリガナ（メイ）
+        birthday: 生年月日
+        email: メールアドレス
+        email_confirmation: メールアドレス[確認]
+        zip_code: 郵便番号
+        prefecture: 都道府県
+        city: 市区町村
+        address_line: 番地
+        agreement: 「上記規約に同意する」
+    errors:
+      models:
+        profile:
+          blank: を入力してください。
+          invalid: を正しく入力してください。
+          attributes:
+            family_name_kana:
+              invalid: は全角カタカナで入力して下さい。
+            given_name_kana:
+              invalid: は全角カタカナで入力して下さい。
+            birthday:
+              blank: を選択してください。
+            zip_code:
+              invalid: は半角数字7ケタで入力して下さい。
+            prefecture:
+              blank: を選択してください。
+            agreement:
+              accepted: を選択してください。

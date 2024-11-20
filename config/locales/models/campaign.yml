@@ -1,0 +1,11 @@
+ja:
+  activerecord:
+    models:
+      campaign: キャンペーン
+    attributes:
+      campaign:
+        code: コード値
+        start_at: 予定開始日
+        end_at: 予定終了日
+        approved_at: 承認日時
+        terminated_at: 停止日時

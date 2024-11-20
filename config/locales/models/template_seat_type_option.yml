@@ -1,0 +1,6 @@
+ja:
+  activerecord:
+    errors:
+      models:
+        template_seat_type_option:
+          minimum_price_is_below_zero: 最小価格が0を下回っています

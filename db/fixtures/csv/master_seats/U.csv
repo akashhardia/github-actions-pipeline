@@ -1,0 +1,15 @@
+master_seat_type_index,master_seat_area_index,master_seat_unit_index,row,seat_number,sales_type
+3,7,1,,1,unit
+3,7,1,,2,unit
+3,7,1,,3,unit
+3,7,1,,4,unit
+4,7,2,,5,unit
+4,7,2,,6,unit
+4,7,2,,7,unit
+4,7,2,,8,unit
+5,7,3,,9,unit
+5,7,3,,10,unit
+5,7,3,,11,unit
+5,7,3,,12,unit
+5,7,3,,13,unit
+5,7,3,,14,unit

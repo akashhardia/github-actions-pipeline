@@ -1,0 +1,36 @@
+{
+  "hold_id": "10",
+  "hold_id_daily": 241,
+  "track_code": "22",
+  "race_table": [
+    {
+      "program_no": 1,
+      "entries_id": "222222",
+      "race_no": 1,
+      "type_code": "1",
+      "race_status": 0
+    },
+    {
+      "program_no": 2,
+      "entries_id": "333333",
+      "race_no": 2,
+      "type_code": "1",
+      "race_status": 0
+    },
+    {
+      "program_no": 3,
+      "entries_id": "444444",
+      "race_no": 3,
+      "type_code": "1",
+      "race_status": 0
+    },
+    {
+      "program_no": 4,
+      "entries_id": "555555",
+      "race_no": 4,
+      "type_code": "1",
+      "race_status": 0
+    }
+  ],
+  "result_code": 100
+}

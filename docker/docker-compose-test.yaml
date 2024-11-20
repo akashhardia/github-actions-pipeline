@@ -1,0 +1,43 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: ../
+      dockerfile: docker/app/Dockerfile.test
+    env_file:
+      ../app.env
+    environment:
+      RAILS_ENV: test
+      RAILS_MASTER_KEY: ${TEST_RAILS_MASTER_KEY}
+    depends_on:
+      - mysql
+      - redis
+    tty: true
+    stdin_open: true
+
+  mysql:
+    build:
+      context: ../
+      dockerfile: docker/mysql/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    command: mysqld
+
+  redis:
+    build:
+      context: ../
+      dockerfile: docker/redis/Dockerfile
+    networks:
+      - default
+    ports:
+      - 6379
+      - 6380
+    command: /bin/sh -c "redis-server --appendonly yes"
+
+  dockerize:
+    build:
+      context: ../
+      dockerfile: docker/dockerize/Dockerfile
+    depends_on:
+      - mysql
+      - redis

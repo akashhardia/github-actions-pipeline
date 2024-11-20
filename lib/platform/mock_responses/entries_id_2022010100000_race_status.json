@@ -1,0 +1,63 @@
+{
+  "entries_id": "2022010100000",
+  "vote_status": 3,
+  "close_time": "1055",
+  "odds": {
+      "fixed": false,
+      "odds_time": "2022-01-01 11:11:11",
+      "odds_list": [
+          {
+              "vote_type": 10,
+              "tip1": "1",
+              "tip2": null,
+              "tip3": null,
+              "odds_val": 4.3,
+              "odds_max_val": 0,
+              "vote_count": 1527
+          },
+          {
+              "vote_type": 30,
+              "tip1": "1",
+              "tip2": "2",
+              "tip3": null,
+              "odds_val": 14.8,
+              "odds_max_val": 0,
+              "vote_count": 1370
+          },
+          {
+              "vote_type": 30,
+              "tip1": "1",
+              "tip2": "3",
+              "tip3": null,
+              "odds_val": 9.9,
+              "odds_max_val": 0,
+              "vote_count": 2040
+          }
+      ],
+      "vote_count": [
+          {
+              "vote_type": 10,
+              "count": 1000
+          },
+          {
+              "vote_type": 30,
+              "count": 2000
+          }
+      ]
+  },
+  "race_status": 40,
+  "race_result": {
+      "rank": [
+          "1",
+          "2",
+          "3"
+      ],
+      "time_accumulated": [
+          null,
+          null,
+          null
+      ],
+      "payoff_list": null
+  },
+  "result_code": 100
+}

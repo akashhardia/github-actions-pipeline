@@ -1,0 +1,140 @@
+require:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-performance
+
+AllCops:
+  TargetRubyVersion: 2.7
+  TargetRailsVersion: 6.0
+  Exclude:
+    - 'vendor/**/*'
+    - 'bin/**/*'
+    - 'db/**/*'
+    - 'tmp/**/*'
+    - 'node_modules/**/*'
+    - 'lib/tasks/auto_annotate_models.rake'
+
+Rails:
+  Enabled: true
+
+# specはparamが括弧無しで渡されたときに、メソッドとのあいまいなブロックの関連付けをチェックしない
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*.rb'
+
+# ABCチェックのポイントは50ポイントまで許可する
+Metrics/AbcSize:
+  Max: 50
+  Exclude:
+    - 'app/helpers/*'
+
+# モジュールの行数は800行まで許可する
+Metrics/ModuleLength:
+  Max: 800
+
+# クラスの行数は600行まで許可する
+Metrics/ClassLength:
+  Max: 600
+
+# ブロックの行数は100行まで許可する
+Metrics/BlockLength:
+  Max: 100
+  Exclude:
+    - 'spec/**/*.rb'
+
+# メソッドの行数は50行まで許可する
+Metrics/MethodLength:
+  Max: 50
+  Exclude:
+    - 'spec/**/*.rb'
+
+# 行の長さはチェックしない
+Metrics/LineLength:
+  Enabled: false
+
+# バリデーションスキップするメソッドの使用制限
+Rails/SkipsModelValidations:
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'app/services/*.rb'
+
+# Marshal.loadメソッドの使用制限
+Security/MarshalLoad:
+  Exclude:
+    - 'spec/**/*.rb'
+
+# コメントのアスキー文字以外を許可する
+Style/AsciiComments:
+  Enabled: false
+
+# 内容が空のメソッドでも複数行を許可する
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+# 記述を統一する為に複数行でも->記法を許可する
+Style/Lambda:
+  Enabled: false
+
+# シンボルの配列はリテラル以外も許可する
+Style/SymbolArray:
+  Enabled: false
+
+# diffが少なくなるため最後のカンマは許可する(リテラル)
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+# diffが少なくなるため最後のカンマは許可する(引数)
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+# rspecは結構長くなりがちなので、行数はチェックしない
+RSpec/ExampleLength:
+  Enabled: false
+
+# ほぼ MultipleExpectations についてはチェックされなくなる設定なので注意。
+RSpec/MultipleExpectations:
+  Enabled: false
+
+# context の説明はwhen,with,withoutを使うとのこと日本語で表記なので外す
+RSpec/ContextWording:
+  Enabled: false
+
+# let5個しかかけないのは厳しいので許可
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+# ネストさせた方が読みやすくなるパターンもあるため
+RSpec/NestedGroups:
+  Max: 5
+
+# 複雑度検査を緩める
+Metrics/PerceivedComplexity:
+  Max: 10
+
+# 循環的複雑度検査を緩める
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+# staging環境を追加したため設定
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - staging
+
+# 変数展開やエスケープの必要がない場合はシングルクォートを利用する
+StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/NumericLiterals:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+Style/StringConcatenation:
+  Enabled: false
+
+Style/HashAsLastArrayItem:
+  Enabled: false

@@ -1,0 +1,66 @@
+{
+  "hold_list": [
+    {
+      "hold_id": "10",
+      "track_code": "34",
+      "first_day": "20201014",
+      "hold_days": 2,
+      "grade_code": "0",
+      "purpose_code": "10",
+      "repletion_code": "5",
+      "hold_name_list": [
+        {
+          "lang": "jp",
+          "hold_name": "川崎開催テスト２"
+        },
+        {
+          "lang": "en",
+          "hold_name": null
+        }
+      ],
+      "hold_status": "2",
+      "promoter_code": "3050",
+      "promoter_year": 2020,
+      "promoter_times": 2,
+      "promoter_section": 0,
+      "days_list": [
+        {
+          "program_count": 0,
+          "hold_id_daily": 240,
+          "event_date": "20201013",
+          "hold_daily": 0,
+          "daily_branch": 1,
+          "race_count": 0,
+          "daily_status": "0",
+          "race_list": []
+        },
+        {
+          "program_count": 10,
+          "hold_id_daily": 241,
+          "event_date": "20201014",
+          "hold_daily": 1,
+          "daily_branch": 1,
+          "race_count": 9,
+          "daily_status": "5",
+          "race_list": []
+        }
+      ],
+      "original_info": {
+        "first_day": "20201014",
+        "year_name": "決定戦",
+        "period": 2,
+        "round": 6,
+        "girl": true,
+        "promoter": "5500",
+        "promoter_times": 1,
+        "promoter_section": 2,
+        "time_zone": 11,
+        "audience": false,
+        "grade_code": 111,
+        "title_jp": "賞金王",
+        "title_en": "KING"
+      }
+    }
+  ],
+  "result_code": 100
+}

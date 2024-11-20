@@ -1,0 +1,33 @@
+{
+  "player_id": 1,
+  "race_result": [
+    {
+      "hold_id": "1",
+      "event_date": "2021101",
+      "hold_daily": 1,
+      "entries_id": "1",
+      "race_no": 2,
+      "rank": 1,
+      "time": "12:34.5678"
+    },
+    {
+      "hold_id": "1",
+      "event_date": "20211102",
+      "hold_daily": 2,
+      "entries_id": "2",
+      "race_no": 3,
+      "rank": 2,
+      "time": "12:34.5678"
+    },
+    {
+      "hold_id": "1",
+      "event_date": "20211102",
+      "hold_daily": 2,
+      "entries_id": "3",
+      "race_no": 4,
+      "rank": 3,
+      "time": "12:34.5678"
+    }
+  ],
+  "result_code": 100
+}

@@ -1,0 +1,10 @@
+@startuml 
+autonumber
+250PF -> 250portal : 投票状況通知
+250portal -> DB : entries_id, pf_hold_id, hold_id_daily\nをもとに出走表詳細を探索
+DB -> DB : 出走表詳細を更新
+note right: close_timeを更新
+250portal -[#green]> 250PF : 成功した場合result_code100を返す
+autonumber 4
+250portal -[#red]> 250PF : 失敗した場合result_code600を返す
+@enduml

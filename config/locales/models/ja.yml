@@ -1,0 +1,8 @@
+ja:
+  activerecord:
+    enum:
+      hold_daily_schedule:
+        daily_no:
+          am: デイ
+          pm: ナイター
+

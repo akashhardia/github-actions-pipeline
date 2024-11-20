@@ -1,0 +1,39 @@
+{
+  "result_code": 100,
+  "hold_list": [
+    {
+      "id": "a1",
+      "first_day": "20210401",
+      "track_code": "0001",
+      "hold_days": 2,
+      "pre_day": true,
+      "year_name": "競輪王決定戦",
+      "year_name_en": "Keirin King",
+      "period": 1,
+      "round": 5,
+      "girl": false,
+      "promoter_times": 16,
+      "promoter_section": 2,
+      "time_zone": 11,
+      "audience": true,
+      "grade_code": "0"
+    },
+    {
+      "id": "a2",
+      "first_day": "20210501",
+      "track_code": "0001",
+      "hold_days": 2,
+      "pre_day": true,
+      "year_name": "競輪女王決定戦",
+      "year_name_en": "Keirin Queen",
+      "period": 1,
+      "round": 5,
+      "girl": true,
+      "promoter_times": 16,
+      "promoter_section": 2,
+      "time_zone": 11,
+      "audience": true,
+      "grade_code": "0"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+ja:
+  activerecord:
+    attributes:
+      hold:
+        hold_status:
+          before_held: 開催前
+          being_held: 開催中
+          finished_held: 開催終了
+          canceled_in_inspection: 前検査日中止
+          canceled_before_inspection: 前検査日前中止

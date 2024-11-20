@@ -1,0 +1,58 @@
+{
+  "hold_id": "10",
+  "hold_id_daily": 240,
+  "track_code": "22",
+  "hold_day": "20210102",
+  "first_day": "20210102",
+  "hold_daily": 1,
+  "daily_branch": 1,
+  "entries_id": "444444",
+  "race_no": 4,
+  "bike_count": 6,
+  "race_distance": 1000,
+  "laps_count": 1,
+  "post_time": "1410",
+  "grade_code": "5",
+  "repletion_code": "5",
+  "race_code": "1",
+  "first_race_code": "C",
+  "entry_code": "6",
+  "type_code": "1",
+  "event_code": "1",
+  "pattern_code": "1",
+  "details_code": "05",
+  "time_zone_code": 1,
+  "race_status": 0,
+  "players_list": [
+    {
+      "bracket_no": 1,
+      "bike_no": 1,
+      "player_id": "1",
+      "gear": 0,
+      "miss": false,
+      "start_position": null,
+      "bike_info": {
+        "frame_code": null,
+        "front_wheel_info": {
+          "wheel_code": null,
+          "rental_code": null
+        },
+        "rear_wheel_info": {
+          "wheel_code": null,
+          "rental_code": null
+        }
+      }
+    }
+  ],
+  "vote_list": [
+    {
+      "vote_type": 10,
+      "vote_status": 1
+    },
+    {
+      "vote_type": 20,
+      "vote_status": 1
+    }
+  ],
+  "result_code": 100
+}
