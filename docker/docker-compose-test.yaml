@@ -8,7 +8,7 @@ services:
       ../app.env
     environment:
       RAILS_ENV: test
-      RAILS_MASTER_KEY: ${TEST_RAILS_MASTER_KEY}
+      RAILS_MASTER_KEY: 5gq4Gs8TP0sTwGHe
     depends_on:
       - mysql
       - redis

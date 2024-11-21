@@ -7,9 +7,9 @@ on:
   pull_request:
     branches:
       - '**'
+  workflow_dispatch:
 
 jobs:
-
   test:
     runs-on: ubuntu-latest
     env:
@@ -44,35 +44,40 @@ jobs:
           COMPOSE_YAML: docker/docker-compose-test.yaml
 
       - name: Setup database
-        run: docker-compose -f ${{ env.COMPOSE_YAML }} run --rm app bundle exec rails db:create db:migrate
+        run: |
+          docker-compose -f docker/docker-compose-test.yaml run --rm app env
+          docker-compose -f ${{ env.COMPOSE_YAML }} run --rm app bundle exec rails db:create db:migrate
         env:
           COMPOSE_YAML: docker/docker-compose-test.yaml
+          TEST_RAILS_MASTER_KEY: 5gq4Gs8TP0sTwGHe
 
-      - name: Notify Slack on success
-        if: success()
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          payload: '{"text":"Test job succeeded :tada:"}'
+      # - name: Notify Slack on success
+      #   if: success()
+      #   uses: slackapi/slack-github-action@v1.23.0
+      #   with:
+      #     payload: '{"text":"Test job succeeded :tada:"}'
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+  build-and-push:
+    needs: test
+    if: needs.test.outputs.result == 'success'
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push Docker images
+        run: |
+          docker buildx build --file docker/backend_nginx/Dockerfile.$GITHUB_ENV --tag ${{ secrets.AWS_ECR_URL }}/nginx:${{ github.sha }} --push .
+          docker buildx build --file docker/app/Dockerfile.production --tag ${{ secrets.AWS_ECR_URL }}/rails:${{ github.sha }} --push .
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-
-  # build-and-push:
-  #   needs: test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  #     - name: Log in to Amazon ECR
-  #       uses: aws-actions/amazon-ecr-login@v1
-
-  #     - name: Build and push Docker images
-  #       run: |
-  #         docker buildx build --file docker/backend_nginx/Dockerfile.$GITHUB_ENV --tag ${{ secrets.AWS_ECR_URL }}/nginx:${{ github.sha }} --push .
-  #         docker buildx build --file docker/app/Dockerfile.production --tag ${{ secrets.AWS_ECR_URL }}/rails:${{ github.sha }} --push .
-  #       env:
-  #         AWS_REGION: ${{ secrets.AWS_REGION }}
-  #         GITHUB_ENV: staging  # Change based on branch/environment
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          GITHUB_ENV: staging  # Change based on branch/environment
 
   # deploy:
   #   needs: build-and-push
