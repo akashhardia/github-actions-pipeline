@@ -63,6 +63,7 @@ jobs:
   build-and-push:
     # needs: test
     # if: needs.test.outputs.result == 'success'
+    if: github.ref_name == 'stg' || github.ref_name == 'prd'
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
     steps:
@@ -85,11 +86,8 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-          docker buildx build --file docker/backend_nginx/Dockerfile.$GITHUB_ENV --tag ${{ secrets.AWS_ECR_URL }}/nginx:${{ github.sha }} --push .
+          docker buildx build --file docker/backend_nginx/Dockerfile.${{ github.ref_name }} --tag ${{ secrets.AWS_ECR_URL }}/nginx:${{ github.sha }} --push .
           docker buildx build --file docker/app/Dockerfile.production --tag ${{ secrets.AWS_ECR_URL }}/rails:${{ github.sha }} --push .
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          GITHUB_ENV: staging  # Change based on branch/environment
 
   # deploy:
   #   needs: build-and-push
