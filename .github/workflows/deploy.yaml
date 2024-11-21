@@ -12,8 +12,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      TEST_RAILS_MASTER_KEY: 5gq4Gs8TP0sTwGHe
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -49,7 +47,6 @@ jobs:
           docker-compose -f ${{ env.COMPOSE_YAML }} run --rm app bundle exec rails db:create db:migrate
         env:
           COMPOSE_YAML: docker/docker-compose-test.yaml
-          TEST_RAILS_MASTER_KEY: 5gq4Gs8TP0sTwGHe
 
       # - name: Notify Slack on success
       #   if: success()
