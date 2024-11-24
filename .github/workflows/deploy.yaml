@@ -135,7 +135,7 @@ jobs:
           run-task-container-overrides: |
             [
               {
-                "name": "app",
+                "name": "pst-gt-stg-rails",
                 "command": ["bundle", "exec", "rails", "db:migrate"]
               }
             ]
