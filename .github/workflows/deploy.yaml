@@ -122,6 +122,9 @@ jobs:
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ env.ECR_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/${{ env.CONTAINER_NAME }}:${{ github.sha }}
 
+      - name: debug task defm
+        run: echo ${{ steps.task-def.outputs.task-definition }}
+
       - name: Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
