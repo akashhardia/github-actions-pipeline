@@ -101,6 +101,7 @@ jobs:
     env:
       SERVICE_NAME: pst-gt-${{ github.ref_name }}
       ECR_IMAGE_NAME: pst-gt-${{ github.ref_name }}
+      ECS_CLUSTER: pst-gt-${{ github.ref_name }}-cluster
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -131,8 +132,8 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ var.ECS_SERVICE }}
-          cluster: ${{ var.ECS_CLUSTER }}
+          service: ${{ env.SERVICE_NAME }}
+          cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
           wait-for-minutes: 20
 
