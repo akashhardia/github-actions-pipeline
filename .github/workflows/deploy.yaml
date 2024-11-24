@@ -60,7 +60,7 @@ jobs:
   #     #   env:
   #     #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-  build-and-push:
+  Build:
     # needs: test
     # if: needs.test.result == 'success' && github.ref_name == 'stg' || github.ref_name == 'prd'
     runs-on: ubuntu-latest
@@ -94,9 +94,9 @@ jobs:
             --tag ${{ secrets.AWS_ECR_URL }}/${{ vars.REGISTRY_NAME }}-rails:latest \
             --push .
 
-  deploy:
-    needs: build-and-push
-    if: needs.build-and-push.result == 'success' && github.ref_name == 'stg' || github.ref_name == 'prd'
+  Deploy:
+    needs: Build
+    if: needs.Build.result == 'success' && github.ref_name == 'stg' || github.ref_name == 'prd'
     runs-on: ubuntu-latest
     env:
       SERVICE_NAME: pst-gt-${{ github.ref_name }}
@@ -144,9 +144,9 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-  migration:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run DB migrations
-        run: aws ecs run-task --cluster ${{ secrets.ECS_CLUSTER }} --task-definition migration-task --region ${{ secrets.AWS_REGION }}
+  # migration:
+  #   needs: Deploy
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Run DB migrations
+  #       run: aws ecs run-task --cluster ${{ secrets.ECS_CLUSTER }} --task-definition migration-task --region ${{ secrets.AWS_REGION }}
