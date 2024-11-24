@@ -104,6 +104,8 @@ jobs:
       SERVICE_NAME: pst-gt-${{ github.ref_name }}-sidekiq
       ECR_IMAGE_NAME: pst-gt-${{ github.ref_name }}
       ECS_CLUSTER: pst-gt-${{ github.ref_name }}-cluster
+      SECURITY_GROUP: sg-0a0af6db1d23ce4b4
+      SUBNET: subnet-0be16eb0a13596f33
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -128,8 +130,8 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           run-task: true
-          run-task-security-groups: "${{ github.event.deployment.payload.security_group }}"
-          run-task-subnets: "${{ github.event.deployment.payload.subnet }}"
+          run-task-security-groups: ${{ env.SECURITY_GROUP }}
+          run-task-subnets: ${{ env.SUBNET }}
           run-task-launch-type: FARGATE
           wait-for-minutes: 20
           run-task-container-overrides: |
