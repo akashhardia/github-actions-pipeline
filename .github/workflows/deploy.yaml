@@ -62,8 +62,7 @@ jobs:
 
   build-and-push:
     # needs: test
-    # if: needs.test.outputs.result == 'success'
-    if: github.ref_name == 'stg' || github.ref_name == 'prd'
+    # if: needs.test.result == 'success' && github.ref_name == 'stg' || github.ref_name == 'prd'
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
     steps:
@@ -86,33 +85,57 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-          docker buildx build --file docker/backend_nginx/Dockerfile.${{ github.ref_name }} --tag ${{ secrets.AWS_ECR_URL }}/nginx:${{ github.sha }} --push .
-          docker buildx build --file docker/app/Dockerfile.production --tag ${{ secrets.AWS_ECR_URL }}/rails:${{ github.sha }} --push .
+          docker buildx build --file docker/backend_nginx/Dockerfile.${{ github.ref_name }} --tag ${{ secrets.AWS_ECR_URL }}/${{vars.REGISTRY_NAME}}-nginx:${{ github.sha }} --push .
+          docker buildx build --file docker/app/Dockerfile.production --tag ${{ secrets.AWS_ECR_URL }}/${{vars.REGISTRY_NAME}}-rails:${{ github.sha }} --push .
 
-  # deploy:
-  #   needs: build-and-push
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Deploy to ECS
-  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-  #       with:
-  #         task-definition: task-def.json
-  #         service: ${{ secrets.ECS_SERVICE }}
-  #         cluster: ${{ secrets.ECS_CLUSTER }}
-  #         region: ${{ secrets.AWS_REGION }}
-  #         wait-for-service-stability: true
+  deploy:
+    needs: build-and-push
+    if: needs.build-and-push.result == 'success' && github.ref_name == 'stg' || github.ref_name == 'prd'
+    runs-on: ubuntu-latest
+    env:
+      SERVICE_NAME: pst-gt-${{ github.ref_name }}
+      ECR_IMAGE_NAME: pst-gt-${{ github.ref_name }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Notify Slack on success
-  #       if: success()
-  #       uses: slackapi/slack-github-action@v1.23.0
-  #       with:
-  #         payload: '{"text":"Deployment succeeded for ${{ github.ref_name }} :rocket:"}'
-  #       env:
-  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-  # migration:
-  #   needs: deploy
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Run DB migrations
-  #       run: aws ecs run-task --cluster ${{ secrets.ECS_CLUSTER }} --task-definition migration-task --region ${{ secrets.AWS_REGION }}
+      - name: Update Image in ECS Task Definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        env:
+          CONTAINER_NAME: ${{ env.ECR_IMAGE_NAME }}-rails
+        with:
+          task-definition-family: ${{ env.SERVICE_NAME }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ env.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: task-def.json
+          service: ${{ secrets.ECS_SERVICE }}
+          cluster: ${{ secrets.ECS_CLUSTER }}
+          region: ${{ secrets.AWS_REGION }}
+          wait-for-service-stability: true
+
+      - name: Notify Slack on success
+        if: success()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: '{"text":"Deployment succeeded for ${{ github.ref_name }} :rocket:"}'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+  migration:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run DB migrations
+        run: aws ecs run-task --cluster ${{ secrets.ECS_CLUSTER }} --task-definition migration-task --region ${{ secrets.AWS_REGION }}
