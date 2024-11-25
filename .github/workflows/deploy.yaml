@@ -11,6 +11,7 @@ on:
   pull_request:
     branches:
       - '**'
+  workflow_dispatch:          # remove this
 
 jobs:
   test:
@@ -51,15 +52,17 @@ jobs:
         env:
           COMPOSE_YAML: docker/docker-compose-test.yaml
 
-      - name: Notify Status
-        if: always()
-        uses: ./.github/workflows/slack-notify.yml
-        with:
-          status: ${{ success() && 'success' || 'failure' }}
-          stage: test
-          commit: ${{ github.sha }}
+      # - name: Notify Slack on success
+      #   if: success()
+      #   uses: slackapi/slack-github-action@v2.0.0
+      #   with:
+      #     payload: '{"text":"Test job succeeded :tada:"}'
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   build:
+    # needs: test
+    # if: needs.test.result == 'success' && github.ref_name == 'stg' || github.ref_name == 'prd'
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
     steps:
@@ -76,6 +79,9 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
+          registries: ${{ env.ECR_ACCOUNT_ID }}
 
       - name: Build and push Docker images
         run: |
@@ -88,19 +94,64 @@ jobs:
             --tag ${{ secrets.AWS_ECR_URL }}/${{ vars.REGISTRY_NAME }}-rails:latest \
             --push .
 
-      - name: Notify Status
-        if: always()
-        uses: ./.github/workflows/slack-notify.yml
-        with:
-          status: ${{ success() && 'success' || 'failure' }}
-          stage: build
-          commit: ${{ github.sha }}
 
   migrations:
+    runs-on: ubuntu-latest
     needs: build
-    if: needs.build.result == 'success'
-    runs-on: ubuntu-latest
+    if: needs.build.result == 'success' && github.ref_name == 'stg' || github.ref_name == 'prd'
     environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
+    env:
+      SERVICE_NAME: pst-gt-${{ github.ref_name }}-sidekiq
+      ECR_IMAGE_NAME: pst-gt-${{ github.ref_name }}
+      ECS_CLUSTER: pst-gt-${{ github.ref_name }}-cluster
+      SECURITY_GROUP: sg-0a0af6db1d23ce4b4        # update this
+      SUBNET: subnet-0be16eb0a13596f33            # update this
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1            # update this
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Update Image in ECS Task Definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        env:
+          CONTAINER_NAME: ${{ env.ECR_IMAGE_NAME }}-rails
+        with:
+          task-definition-family: ${{ env.SERVICE_NAME }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ env.ECR_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+      - name: Deploy Updated Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          cluster: ${{ env.ECS_CLUSTER }}
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          run-task: true
+          run-task-security-groups: ${{ env.SECURITY_GROUP }}
+          run-task-subnets: ${{ env.SUBNET }}
+          run-task-launch-type: FARGATE
+          wait-for-minutes: 20
+          run-task-container-overrides: |
+            [
+              {
+                "name": "pst-gt-${{github.ref_name}}-rails",
+                "command": ["bundle", "exec", "rails", "db:migrate"]
+              }
+            ]
+
+
+  deploy-web:
+    needs: [build, migrations]
+    if: needs.build.result == 'success' && github.ref_name == 'stg' || github.ref_name == 'prd'
+    environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
+    runs-on: ubuntu-latest
+    env:
+      SERVICE_NAME: pst-gt-${{ github.ref_name }}
+      ECR_IMAGE_NAME: pst-gt-${{ github.ref_name }}
+      ECS_CLUSTER: pst-gt-${{ github.ref_name }}-cluster
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -112,24 +163,45 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Run migrations
-        run: |
-          # Example ECS run-task for migration
-          echo "Running migrations on ECS..."
+      - name: Update Image in ECS Task Definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        env:
+          CONTAINER_NAME: ${{ env.ECR_IMAGE_NAME }}-rails
+        with:
+          task-definition-family: ${{ env.SERVICE_NAME }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ env.ECR_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/${{ env.CONTAINER_NAME }}:${{ github.sha }}
 
-      - name: Notify Status
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.SERVICE_NAME }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+          wait-for-minutes: 20
+
+      - name: Notify Slack
         if: always()
         uses: ./.github/workflows/slack-notify.yml
         with:
           status: ${{ success() && 'success' || 'failure' }}
-          stage: migrations
+          environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ env.SERVICE_NAME }}
           commit: ${{ github.sha }}
 
-  deploy:
-    needs: migrations
-    if: needs.migrations.result == 'success'
-    runs-on: ubuntu-latest
+
+  deploy-sidekiq:
+    needs: [build, migrations]
+    if: needs.build.result == 'success' && (github.ref_name == 'stg' || github.ref_name == 'prd')
     environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
+    runs-on: ubuntu-latest
+    env:
+      ECS_CLUSTER: pst-gt-${{ github.ref_name }}-cluster
+      SERVICE_NAME: pst-gt-${{ github.ref_name }}-sidekiq
+      ECR_IMAGE_NAME: pst-gt-${{ github.ref_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -141,14 +213,44 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Deploy ECS Services
-        run: |
-          echo "Deploying to ECS cluster for ${{ github.ref_name }}"
+      - name: Update Image in ECS Task Definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        env:
+          CONTAINER_NAME: ${{ env.ECR_IMAGE_NAME }}-rails
+        with:
+          task-definition-family: ${{ env.SERVICE_NAME }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ env.ECR_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/${{ env.CONTAINER_NAME }}:${{ github.sha }}
 
-      - name: Notify Status
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.SERVICE_NAME }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+          wait-for-minutes: 20
+
+      - name: Notify Slack
         if: always()
         uses: ./.github/workflows/slack-notify.yml
         with:
           status: ${{ success() && 'success' || 'failure' }}
-          stage: deploy
+          environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ env.SERVICE_NAME }}
           commit: ${{ github.sha }}
+
+
+  # slack-test-notify:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Notify Slack on success
+  #       if: success()
+  #       uses: slackapi/slack-github-action@v2.0.0
+  #       with:
+  #         payload: '{"text":"TESTDeployment succeeded for ${{ github.ref_name }} :rocket:"}'
+  #         webhook-type: webhook-trigger
+  #       env:
+  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
