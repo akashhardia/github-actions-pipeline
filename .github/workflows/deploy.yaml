@@ -84,6 +84,7 @@ jobs:
           registries: ${{ env.ECR_ACCOUNT_ID }}
 
       - name: Build and push Docker images
+        id: build
         run: |
           docker buildx build --file docker/backend_nginx/Dockerfile.${{ github.ref_name }} \
             --tag ${{ secrets.AWS_ECR_URL }}/${{ vars.REGISTRY_NAME }}-nginx:${{ github.sha }} \
@@ -93,7 +94,6 @@ jobs:
             --tag ${{ secrets.AWS_ECR_URL }}/${{ vars.REGISTRY_NAME }}-rails:${{ github.sha }} \
             --tag ${{ secrets.AWS_ECR_URL }}/${{ vars.REGISTRY_NAME }}-rails:latest \
             --push .
-
 
   migrations:
     runs-on: ubuntu-latest
@@ -174,6 +174,7 @@ jobs:
           image: ${{ env.ECR_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/${{ env.CONTAINER_NAME }}:${{ github.sha }}
 
       - name: Deploy to ECS
+        id: deploy
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
@@ -184,9 +185,9 @@ jobs:
 
       - name: Notify Slack
         if: always()
-        uses: ./.github/workflows/slack-notify.yml
+        uses: ./.github/workflows/slack-notify.yaml
         with:
-          status: ${{ success() && 'success' || 'failure' }}
+          status: ${{ steps.deploy.outcome != 'success' && 'success' || 'failure' }}
           environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
           cluster: ${{ env.ECS_CLUSTER }}
           service: ${{ env.SERVICE_NAME }}
@@ -224,6 +225,7 @@ jobs:
           image: ${{ env.ECR_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/${{ env.CONTAINER_NAME }}:${{ github.sha }}
 
       - name: Deploy to ECS
+        id: deploy
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
@@ -234,23 +236,10 @@ jobs:
 
       - name: Notify Slack
         if: always()
-        uses: ./.github/workflows/slack-notify.yml
+        uses: ./.github/workflows/slack-notify.yaml
         with:
-          status: ${{ success() && 'success' || 'failure' }}
+          status: ${{ steps.deploy.outcome != 'success' && 'success' || 'failure' }}
           environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
           cluster: ${{ env.ECS_CLUSTER }}
           service: ${{ env.SERVICE_NAME }}
           commit: ${{ github.sha }}
-
-
-  # slack-test-notify:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Notify Slack on success
-  #       if: success()
-  #       uses: slackapi/slack-github-action@v2.0.0
-  #       with:
-  #         payload: '{"text":"TESTDeployment succeeded for ${{ github.ref_name }} :rocket:"}'
-  #         webhook-type: webhook-trigger
-  #       env:
-  #         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
