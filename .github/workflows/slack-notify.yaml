@@ -1,0 +1,36 @@
+name: Slack Notify
+
+on:
+  workflow_call:
+    inputs:
+      status:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+      cluster:
+        required: true
+        type: string
+      service:
+        required: true
+        type: string
+      commit:
+        required: true
+        type: string
+    secrets:
+      SLACK_WEBHOOK: {}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack Notification
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          payload: |
+            {
+              "text": ":${{ inputs.status == 'success' && 'white_check_mark' || 'x' }:} *Sidekiq Deployment* ${{ inputs.status == 'success' && 'Succeeded' || 'Failed' }}!\n\nEnvironment: ${{ inputs.environment }}\nCluster: ${{ inputs.cluster }}\nService: ${{ inputs.service }}\nCommit: ${{ inputs.commit }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
