@@ -1,7 +1,8 @@
 name: CI/CD Pipeline
 
 env:
-  ECR_ACCOUNT_ID: 851725381326          // update these
+  # update these
+  ECR_ACCOUNT_ID: 851725381326
   AWS_REGION: ap-northeast-1
   STG_SG: sg-0a0af6db1d23ce4b4
   STG_SUBNET: subnet-0be16eb0a13596f33
@@ -100,8 +101,6 @@ jobs:
       SERVICE_NAME: pst-gt-${{ github.ref_name }}-sidekiq
       CONTAINER_NAME: pst-gt-${{ github.ref_name }}-rails
       ECS_CLUSTER: pst-gt-${{ github.ref_name }}-cluster
-      SECURITY_GROUP: ${{ github.ref_name == 'prd' && env.PRD_SG || env.STG_SG }}
-      SUBNET: ${{ github.ref_name == 'prd' && env.PRD_SUBNET || env.STG_SUBNET }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -125,8 +124,8 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           run-task: true
-          run-task-security-groups: ${{ env.SECURITY_GROUP }}
-          run-task-subnets: ${{ env.SUBNET }}
+          run-task-security-groups: ${{ github.ref_name == 'prd' && env.PRD_SG || env.STG_SG }}
+          run-task-subnets: ${{ github.ref_name == 'prd' && env.PRD_SUBNET || env.STG_SUBNET }}
           run-task-launch-type: FARGATE
           wait-for-minutes: 20
           run-task-container-overrides: |
