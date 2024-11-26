@@ -183,7 +183,7 @@ jobs:
     env:
       ECS_CLUSTER: pst-gt-${{ github.ref_name }}-cluster
       SERVICE_NAME: pst-gt-${{ github.ref_name }}-sidekiq
-      CONTAINER_NAME: pst-gt-${{ github.ref_name }}-sidekiq
+      CONTAINER_NAME: pst-gt-${{ github.ref_name }}-rails
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -217,7 +217,7 @@ jobs:
   notify-success:
     needs: [deploy-web, deploy-sidekiq]
     if: ${{ needs.deploy-web.result == 'success' && needs.deploy-sidekiq.result == 'success' }}
-    uses: ./.github/workflows/slack-notify.yml
+    uses: ./.github/workflows/slack-notify.yaml
     with:
       status: 'success'
       environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
@@ -228,7 +228,7 @@ jobs:
   notify-failure:
     needs: [deploy-web, deploy-sidekiq]
     if: ${{ needs.deploy-web.result != 'success' || needs.deploy-sidekiq.result != 'success' }}
-    uses: ./.github/workflows/slack-notify.yml
+    uses: ./.github/workflows/slack-notify.yaml
     with:
       status: 'failure'
       environment: ${{ github.ref_name == 'stg' && 'staging' || github.ref_name == 'prd' && 'production' }}
