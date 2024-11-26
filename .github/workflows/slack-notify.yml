@@ -21,21 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Notify Slack on success
-        if: success()
-        uses: slackapi/slack-github-action@v2.0.0
-        with:
-          payload: '{"text":"TESTDeployment succeeded for ${{ github.ref_name }} :rocket:"}'
-          webhook-type: webhook-trigger
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Send Slack Notification
         uses: slackapi/slack-github-action@v2.0.0
         with:
           payload: |
             {
-              "text": ":${{ inputs.status == 'success' && 'white_check_mark' || 'x' }}: *Deployment* ${{ inputs.status == 'success' && 'Succeeded' || 'Failed' }}!\n\nEnvironment: ${{ inputs.environment }}\nCommit: ${{ inputs.commit }}\nWorkflow Run: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow>"
+              "text": ":${{ inputs.status == 'success' && 'white_check_mark' || 'x' }}: *Deployment* ${{ inputs.status == 'success' && 'Succeeded :rocket:' || 'Failed' }}!\n\nEnvironment: ${{ inputs.environment }}\nCommit: ${{ inputs.commit }}\nWorkflow Run: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow>"
             }
           webhook-type: webhook-trigger
           webhook: ${{ secrets.SLACK_WEBHOOK }}
